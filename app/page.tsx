@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { LogOut, Sparkles } from "lucide-react";
+import { Flower, LogOut, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { api } from "../convex/_generated/api";
 
@@ -42,7 +42,68 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1628] via-[#0c2234] to-[#0d3d3d]">
+    <div className="min-h-screen relative overflow-hidden bg-[#0a1628]">
+      {/* Animated Serene Gradient Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        {/* Base gradient layer */}
+        <motion.div
+          animate={{
+            background: [
+              "radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.15) 0%, transparent 50%)",
+              "radial-gradient(circle at 80% 50%, rgba(34, 211, 238, 0.15) 0%, transparent 50%)",
+              "radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.15) 0%, transparent 50%)",
+            ],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute inset-0"
+        />
+        
+        {/* Secondary gradient layer */}
+        <motion.div
+          animate={{
+            background: [
+              "radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 80%, rgba(5, 150, 105, 0.1) 0%, transparent 50%)",
+              "radial-gradient(circle at 50% 20%, rgba(20, 184, 166, 0.1) 0%, transparent 50%)",
+              "radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)",
+            ],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+          className="absolute inset-0"
+        />
+        
+        {/* Tertiary gradient layer */}
+        <motion.div
+          animate={{
+            background: [
+              "radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.08) 0%, transparent 60%)",
+              "radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.08) 0%, transparent 60%)",
+              "radial-gradient(circle at 70% 70%, rgba(20, 184, 166, 0.08) 0%, transparent 60%)",
+              "radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.08) 0%, transparent 60%)",
+            ],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+          className="absolute inset-0"
+        />
+      </div>
+
+      {/* Content wrapper with backdrop blur */}
+      <div className="relative z-10">
       {/* Header */}
       <header className="p-6 border-b border-slate-800/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -96,19 +157,21 @@ export default function Home() {
           transition={{ delay: 0.2 }}
           className="text-center py-16 space-y-6"
         >
-          {/* Preview ORB (static visual) */}
+          {/* Zen Icon */}
           <motion.div
             animate={{
-              scale: [1, 1.05, 1],
-              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
             }}
             transition={{
-              duration: 4,
+              duration: 6,
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-teal-400/30 to-teal-600/30 blur-2xl"
-          />
+            className="w-48 h-48 mx-auto flex items-center justify-center"
+          >
+            <Flower className="w-32 h-32 text-teal-400/80" strokeWidth={1.5} />
+          </motion.div>
 
           <div className="space-y-4">
             <h2 className="text-5xl font-bold text-slate-100">
@@ -186,20 +249,6 @@ export default function Home() {
           )}
         </motion.section>
       </main>
-
-      {/* Mist Effect */}
-      <div className="fixed inset-0 pointer-events-none">
-        <motion.div
-          animate={{
-            opacity: [0.05, 0.15, 0.05],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute inset-0 bg-gradient-to-t from-transparent via-teal-500/10 to-transparent"
-        />
       </div>
     </div>
   );
