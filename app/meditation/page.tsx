@@ -2,7 +2,7 @@
 
 import { AudioControls } from "@/components/AudioControls";
 import { ChatInterface } from "@/components/ChatInterface";
-import { MeditationOrb } from "@/components/MeditationOrb";
+import { Orb } from "@/components/ui/orb";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -31,6 +31,12 @@ interface MoodProfile {
   meditationType: string;
 }
 
+// Map mood types to color pairs for the Orb
+function getMoodColors(_meditationType: string): [string, string] {
+  // Gray tones for all moods
+  return ["#9ca3af", "#6b7280"]; // Light gray to darker gray
+}
+
 export default function MeditationPage() {
   const router = useRouter();
   const createSession = useMutation(api.meditation.createSession);
@@ -39,7 +45,7 @@ export default function MeditationPage() {
   const [moodProfile, setMoodProfile] = useState<MoodProfile | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
-  const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now());
+  const [sessionStartTime] = useState<number>(Date.now());
   const [sessionDuration, setSessionDuration] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [sessionSaved, setSessionSaved] = useState(false);
@@ -308,11 +314,15 @@ export default function MeditationPage() {
 
       {/* Main Content - Meditation ORB */}
       <div className="h-screen flex items-center justify-center">
-        <MeditationOrb
-          analysisData={analysisData}
-          mood={moodProfile.meditationType}
-          isActive={isPlaying}
-        />
+        <div className="w-[600px] h-[600px]">
+          <Orb
+            colors={getMoodColors(moodProfile.meditationType)}
+            agentState={isPlaying ? "talking" : null}
+            volumeMode="manual"
+            manualOutput={analysisData.amplitude}
+            manualInput={analysisData.energy}
+          />
+        </div>
       </div>
 
       {/* Audio Controls */}

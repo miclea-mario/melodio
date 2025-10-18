@@ -136,7 +136,7 @@ export default function MoodProfilingPage() {
         >
           <h1 className="text-2xl font-bold text-slate-100 mb-2">Mood Check-In</h1>
           <p className="text-slate-400">
-            Let's understand how you're feeling today ({conversationHistory.length + 1}/{maxQuestions})
+            Let&apos;s understand how you&apos;re feeling today ({conversationHistory.length + 1}/{maxQuestions})
           </p>
           <Progress value={progress} className="mt-4 h-2" />
         </motion.div>

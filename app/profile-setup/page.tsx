@@ -84,7 +84,7 @@ export default function ProfileSetupPage() {
               Welcome to Melodio
             </h1>
             <p className="text-slate-400">
-              Let's personalize your meditation experience
+              Let&apos;s personalize your meditation experience
             </p>
           </div>
 
