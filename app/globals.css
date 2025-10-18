@@ -197,3 +197,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(45, 212, 191, 0.5);
 }
+
+/* Hide scrollbar for credits effect */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

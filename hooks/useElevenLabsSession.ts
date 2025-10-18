@@ -21,7 +21,7 @@ export function useElevenLabsSession({
   const [isConnected, setIsConnected] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [messages, setMessages] = useState<Array<{ text: string; isAgent: boolean }>>([]);
+  const [messages, setMessages] = useState<Array<{ text: string; isAgent: boolean; timestamp: number }>>([]);
   
   const sessionRef = useRef<ElevenLabsSession | null>(null);
   const isStartingRef = useRef(false);
@@ -47,7 +47,7 @@ export function useElevenLabsSession({
   }, []);
 
   const handleMessage = useCallback((message: string, isAgent: boolean) => {
-    setMessages((prev) => [...prev, { text: message, isAgent }]);
+    setMessages((prev) => [...prev, { text: message, isAgent, timestamp: Date.now() }]);
   }, []);
 
   const startSession = useCallback(async () => {

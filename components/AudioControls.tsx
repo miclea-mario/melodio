@@ -3,15 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
-import { MessageSquare, Pause, Play, Square, Volume2 } from "lucide-react";
+import { Pause, Play, Square, Volume2 } from "lucide-react";
 import { useState } from "react";
 
 interface AudioControlsProps {
   isPlaying: boolean;
   onPlayPause: () => void;
   onStop: () => void;
-  onToggleChat: () => void;
-  showChat: boolean;
   onVolumeChange?: (volume: number) => void;
 }
 
@@ -19,8 +17,6 @@ export function AudioControls({
   isPlaying,
   onPlayPause,
   onStop,
-  onToggleChat,
-  showChat,
   onVolumeChange,
 }: AudioControlsProps) {
   const [volume, setVolume] = useState([80]);
@@ -69,20 +65,6 @@ export function AudioControls({
               className="w-24"
             />
           </div>
-
-          {/* Chat Toggle */}
-          <Button
-            onClick={onToggleChat}
-            size="lg"
-            variant="outline"
-            className={`rounded-full w-12 h-12 transition-all ${
-              showChat
-                ? "border-teal-500 bg-teal-500/20 text-teal-400"
-                : "border-slate-600 hover:border-teal-500/50"
-            }`}
-          >
-            <MessageSquare className="w-5 h-5" />
-          </Button>
         </div>
       </div>
     </motion.div>

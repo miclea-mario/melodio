@@ -1,7 +1,7 @@
 "use client";
 
 import { AudioControls } from "@/components/AudioControls";
-import { ChatInterface } from "@/components/ChatInterface";
+import { MeditationSubtitles } from "@/components/MeditationSubtitles";
 import { Orb } from "@/components/ui/orb";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,7 +43,6 @@ export default function MeditationPage() {
   const userProfile = useQuery(api.userProfile.getProfile);
 
   const [moodProfile, setMoodProfile] = useState<MoodProfile | null>(null);
-  const [showChat, setShowChat] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
   const [sessionStartTime] = useState<number>(Date.now());
   const [sessionDuration, setSessionDuration] = useState(0);
@@ -330,13 +329,11 @@ export default function MeditationPage() {
         isPlaying={isPlaying}
         onPlayPause={handlePlayPause}
         onStop={handleStop}
-        onToggleChat={() => setShowChat(!showChat)}
-        showChat={showChat}
         onVolumeChange={handleVolumeChange}
       />
 
-      {/* Chat Interface */}
-      <ChatInterface messages={messages} isOpen={showChat} onClose={() => setShowChat(false)} />
+      {/* Meditation Subtitles */}
+      <MeditationSubtitles messages={messages} />
 
       {/* Mist Effect */}
       <div className="fixed inset-0 pointer-events-none">
