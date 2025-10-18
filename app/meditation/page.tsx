@@ -361,16 +361,16 @@ export default function MeditationPage() {
             <DialogTitle className="text-slate-100">
               {sessionSaved ? "Session Complete" : "End Meditation Session?"}
             </DialogTitle>
-            <DialogDescription className="text-slate-400">
-              {sessionSaved ? (
-                <div className="flex items-center gap-2 text-teal-400">
-                  <CheckCircle2 className="w-5 h-5" />
-                  Your session has been saved successfully
-                </div>
-              ) : (
-                `You've meditated for ${formatTime(sessionDuration)}. Your session will be saved.`
-              )}
-            </DialogDescription>
+            {sessionSaved ? (
+              <div className="flex items-center gap-2 text-teal-400 text-sm">
+                <CheckCircle2 className="w-5 h-5" />
+                <span>Your session has been saved successfully</span>
+              </div>
+            ) : (
+              <DialogDescription className="text-slate-400">
+                You&apos;ve meditated for {formatTime(sessionDuration)}. Your session will be saved.
+              </DialogDescription>
+            )}
           </DialogHeader>
           {!sessionSaved && (
             <DialogFooter>
