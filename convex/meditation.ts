@@ -173,6 +173,8 @@ export const createSession = mutation({
     }),
     duration: v.number(),
     meditationType: v.optional(v.string()),
+    preSessionRating: v.optional(v.number()),
+    postSessionRating: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -187,6 +189,8 @@ export const createSession = mutation({
       duration: args.duration,
       timestamp: Date.now(),
       meditationType: args.meditationType,
+      preSessionRating: args.preSessionRating,
+      postSessionRating: args.postSessionRating,
     });
   },
 });

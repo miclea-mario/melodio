@@ -29,6 +29,7 @@ interface MoodProfile {
   summary: string;
   themes: string[];
   meditationType: string;
+  preSessionRating?: number;
 }
 
 // Map mood types to color pairs for the Orb
@@ -51,6 +52,8 @@ export default function MeditationPage() {
   const [isMusicGenerating, setIsMusicGenerating] = useState(false);
   const sessionStartedRef = useRef(false);
   const musicGeneratorRef = useRef<ElevenLabsMusic | null>(null);
+  const [postSessionRating, setPostSessionRating] = useState<number | null>(null);
+  const [showPostRating, setShowPostRating] = useState(false);
 
   // Load mood profile from session storage
   useEffect(() => {
@@ -216,9 +219,14 @@ export default function MeditationPage() {
 
   const handleStop = () => {
     setShowExitDialog(true);
+    setShowPostRating(true);
   };
 
   const handleConfirmExit = async () => {
+    if (!postSessionRating) {
+      return; // Don't allow exit without post-session rating
+    }
+
     setIsSaving(true);
 
     try {
@@ -237,6 +245,8 @@ export default function MeditationPage() {
         },
         duration: sessionDuration,
         meditationType: moodProfile?.meditationType,
+        preSessionRating: moodProfile?.preSessionRating || 5,
+        postSessionRating: postSessionRating,
       });
 
       setSessionSaved(true);
@@ -353,10 +363,10 @@ export default function MeditationPage() {
 
       {/* Exit Confirmation Dialog */}
       <Dialog open={showExitDialog} onOpenChange={setShowExitDialog}>
-        <DialogContent className="bg-slate-900 border-slate-700">
+        <DialogContent className="bg-slate-900 border-slate-700 max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-slate-100">
-              {sessionSaved ? "Session Complete" : "End Meditation Session?"}
+              {sessionSaved ? "Session Complete" : "How do you feel now?"}
             </DialogTitle>
             {sessionSaved ? (
               <div className="flex items-center gap-2 text-teal-400 text-sm">
@@ -365,24 +375,93 @@ export default function MeditationPage() {
               </div>
             ) : (
               <DialogDescription className="text-slate-400">
-                You&apos;ve meditated for {formatTime(sessionDuration)}. Your session will be saved.
+                You&apos;ve meditated for {formatTime(sessionDuration)}. Please rate how you feel now.
               </DialogDescription>
             )}
           </DialogHeader>
+          
+          {!sessionSaved && showPostRating && (
+            <div className="space-y-6 py-4">
+              {/* Post-Session Rating */}
+              <div className="space-y-4">
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold text-slate-100 mb-2">
+                    How do you feel now?
+                  </h3>
+                  <p className="text-slate-400 text-sm">Rate from 1 (very bad) to 10 (excellent)</p>
+                </div>
+                
+                <div className="grid grid-cols-5 gap-2">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
+                    <button
+                      key={rating}
+                      onClick={() => setPostSessionRating(rating)}
+                      className={`p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
+                        postSessionRating === rating
+                          ? "border-teal-400 bg-teal-500/20 shadow-lg shadow-teal-500/50"
+                          : "border-slate-700 bg-slate-800/50 hover:border-teal-500/50"
+                      }`}
+                    >
+                      <span className="text-xl font-bold text-slate-100">{rating}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Show improvement indicator if both ratings exist */}
+              {postSessionRating && moodProfile?.preSessionRating && (
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                  <p className="text-sm text-slate-300 text-center">
+                    {postSessionRating > moodProfile.preSessionRating && (
+                      <span className="text-teal-400">
+                        ✨ You&apos;re feeling better! ({moodProfile.preSessionRating} → {postSessionRating})
+                      </span>
+                    )}
+                    {postSessionRating === moodProfile.preSessionRating && (
+                      <span className="text-slate-400">
+                        Your mood is stable ({moodProfile.preSessionRating} → {postSessionRating})
+                      </span>
+                    )}
+                    {postSessionRating < moodProfile.preSessionRating && (
+                      <span className="text-slate-400">
+                        It&apos;s okay, meditation takes practice ({moodProfile.preSessionRating} → {postSessionRating})
+                      </span>
+                    )}
+                  </p>
+                </div>
+              )}
+
+              {/* Review Questions & Answers */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold text-slate-300">Session Summary</h4>
+                {moodProfile?.questions.map((qa, index) => (
+                  <div key={index} className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                    <p className="text-xs text-slate-400 mb-1">{qa.question}</p>
+                    <p className="text-sm text-slate-200">{qa.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {!sessionSaved && (
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => setShowExitDialog(false)}
+                onClick={() => {
+                  setShowExitDialog(false);
+                  setShowPostRating(false);
+                  setPostSessionRating(null);
+                }}
                 disabled={isSaving}
                 className="border-slate-600"
               >
-                Continue
+                Continue Meditation
               </Button>
               <Button
                 onClick={handleConfirmExit}
-                disabled={isSaving}
-                className="bg-teal-600 hover:bg-teal-500"
+                disabled={isSaving || !postSessionRating}
+                className="bg-teal-600 hover:bg-teal-500 disabled:opacity-50"
               >
                 {isSaving ? "Saving..." : "End Session"}
               </Button>

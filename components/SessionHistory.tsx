@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Calendar, Clock } from "lucide-react";
+import { Calendar, Clock, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 interface Session {
   _id: string;
@@ -11,6 +11,8 @@ interface Session {
   duration: number;
   timestamp: number;
   meditationType?: string;
+  preSessionRating?: number;
+  postSessionRating?: number;
 }
 
 interface SessionHistoryProps {
@@ -33,6 +35,25 @@ export function SessionHistory({ sessions }: SessionHistoryProps) {
     if (diffDays === 1) return "Yesterday";
     if (diffDays < 7) return `${diffDays} days ago`;
     return date.toLocaleDateString();
+  };
+
+  const getRatingImprovement = (pre?: number, post?: number) => {
+    if (pre === undefined || post === undefined) return null;
+    return post - pre;
+  };
+
+  const getRatingColor = (improvement: number | null) => {
+    if (improvement === null) return "text-slate-400";
+    if (improvement > 0) return "text-green-400";
+    if (improvement < 0) return "text-amber-400";
+    return "text-slate-400";
+  };
+
+  const getRatingIcon = (improvement: number | null) => {
+    if (improvement === null) return null;
+    if (improvement > 0) return <TrendingUp className="w-4 h-4" />;
+    if (improvement < 0) return <TrendingDown className="w-4 h-4" />;
+    return <Minus className="w-4 h-4" />;
   };
 
   if (sessions.length === 0) {
@@ -60,11 +81,30 @@ export function SessionHistory({ sessions }: SessionHistoryProps) {
                   {session.mood}
                 </h3>
                 {session.meditationType && (
-                  <Badge variant="outline" className="border-teal-500/30 text-teal-400">
+                  <Badge variant="outline" className="border-teal-500/30 text-teal-400 text-xs">
                     {session.meditationType}
                   </Badge>
                 )}
               </div>
+
+              {/* Ratings */}
+              {session.preSessionRating !== undefined && session.postSessionRating !== undefined && (
+                <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700/50">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="text-center">
+                      <p className="text-xs text-slate-500 mb-1">Before</p>
+                      <p className="text-2xl font-bold text-slate-300">{session.preSessionRating}</p>
+                    </div>
+                    <div className={`flex items-center gap-1 ${getRatingColor(getRatingImprovement(session.preSessionRating, session.postSessionRating))}`}>
+                      {getRatingIcon(getRatingImprovement(session.preSessionRating, session.postSessionRating))}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-slate-500 mb-1">After</p>
+                      <p className="text-2xl font-bold text-slate-300">{session.postSessionRating}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Duration */}
               <div className="flex items-center gap-2 text-sm text-slate-400">

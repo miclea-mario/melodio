@@ -2,10 +2,11 @@
 
 import { SessionHistory } from "@/components/SessionHistory";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { Flower, LogOut, Sparkles } from "lucide-react";
+import { Flower, LogOut, Sparkles, TrendingUp, Award } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { api } from "../convex/_generated/api";
 
@@ -26,6 +27,47 @@ export default function Home() {
       router.push("/signin");
     });
   };
+
+  // Calculate best meditation type based on rating improvements
+  const getBestMeditationType = () => {
+    if (!sessions || sessions.length === 0) return null;
+
+    const typeImprovements: Record<string, { total: number; count: number }> = {};
+
+    sessions.forEach((session) => {
+      if (
+        session.meditationType &&
+        session.preSessionRating !== undefined &&
+        session.postSessionRating !== undefined
+      ) {
+        const improvement = session.postSessionRating - session.preSessionRating;
+        if (!typeImprovements[session.meditationType]) {
+          typeImprovements[session.meditationType] = { total: 0, count: 0 };
+        }
+        typeImprovements[session.meditationType].total += improvement;
+        typeImprovements[session.meditationType].count += 1;
+      }
+    });
+
+    let bestType = "";
+    let bestAverage = -Infinity;
+
+    Object.entries(typeImprovements).forEach(([type, data]) => {
+      const average = data.total / data.count;
+      if (average > bestAverage && data.count >= 1) {
+        bestAverage = average;
+        bestType = type;
+      }
+    });
+
+    if (bestType && bestAverage > 0) {
+      return { type: bestType, improvement: bestAverage, count: typeImprovements[bestType].count };
+    }
+
+    return null;
+  };
+
+  const bestMeditation = getBestMeditationType();
 
   // Check if user needs to complete profile
   if (isAuthenticated && userProfile !== undefined && !userProfile?.profileCompleted) {
@@ -239,6 +281,49 @@ export default function Home() {
               Recent Sessions
             </h3>
           </div>
+
+          {/* Best Meditation Type Insight */}
+          {bestMeditation && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 }}
+              className="max-w-2xl mx-auto"
+            >
+              <div className="bg-gradient-to-br from-teal-500/10 via-teal-600/5 to-green-500/10 border-2 border-teal-500/30 rounded-2xl p-6 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0">
+                    <Award className="w-6 h-6 text-teal-400" />
+                  </div>
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="text-lg font-semibold text-slate-100">
+                        Your Best Meditation Type
+                      </h4>
+                      <Badge className="bg-teal-500/20 text-teal-300 border-teal-400/30">
+                        {bestMeditation.type}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-6">
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="w-5 h-5 text-green-400" />
+                        <span className="text-2xl font-bold text-green-400">
+                          +{bestMeditation.improvement.toFixed(1)}
+                        </span>
+                        <span className="text-sm text-slate-400">avg improvement</span>
+                      </div>
+                      <div className="text-sm text-slate-400">
+                        Based on {bestMeditation.count} session{bestMeditation.count > 1 ? "s" : ""}
+                      </div>
+                    </div>
+                    <p className="text-sm text-slate-300">
+                      This meditation type consistently helps you feel better. Consider using it when you need the most support.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {sessions ? (
             <SessionHistory sessions={sessions} />
