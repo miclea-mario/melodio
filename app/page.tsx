@@ -236,33 +236,33 @@ export default function Home() {
               transition={{ delay: 0.5 }}
               className="max-w-2xl mx-auto"
             >
-              <div className="bg-gradient-to-br from-teal-500/10 via-teal-600/5 to-green-500/10 border-2 border-teal-500/30 rounded-2xl p-6 backdrop-blur-sm">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0">
-                    <Award className="w-6 h-6 text-teal-400" />
+              <div className="bg-gradient-to-br from-teal-500/10 via-teal-600/5 to-green-500/10 border-2 border-teal-500/30 rounded-2xl p-4 sm:p-6 backdrop-blur-sm">
+                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0 self-center sm:self-start">
+                    <Award className="w-5 h-5 sm:w-6 sm:h-6 text-teal-400" />
                   </div>
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="text-lg font-semibold text-slate-100">
+                  <div className="flex-1 space-y-3 w-full">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                      <h4 className="text-base sm:text-lg font-semibold text-slate-100 text-center sm:text-left">
                         Your Best Meditation Type
                       </h4>
-                      <Badge className="bg-teal-500/20 text-teal-300 border-teal-400/30">
+                      <Badge className="bg-teal-500/20 text-teal-300 border-teal-400/30 self-center sm:self-auto">
                         {bestMeditation.type}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-5 h-5 text-green-400" />
-                        <span className="text-2xl font-bold text-green-400">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                      <div className="flex items-center justify-center sm:justify-start gap-2">
+                        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+                        <span className="text-xl sm:text-2xl font-bold text-green-400">
                           +{bestMeditation.improvement.toFixed(1)}
                         </span>
-                        <span className="text-sm text-slate-400">avg improvement</span>
+                        <span className="text-xs sm:text-sm text-slate-400">avg improvement</span>
                       </div>
-                      <div className="text-sm text-slate-400">
+                      <div className="text-xs sm:text-sm text-slate-400 text-center sm:text-left">
                         Based on {bestMeditation.count} session{bestMeditation.count > 1 ? "s" : ""}
                       </div>
                     </div>
-                    <p className="text-sm text-slate-300">
+                    <p className="text-xs sm:text-sm text-slate-300 text-center sm:text-left">
                       This meditation type consistently helps you feel better. Consider using it when you need the most support.
                     </p>
                   </div>
