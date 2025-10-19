@@ -7,7 +7,7 @@ import DarkVeil from "@/components/DarkVeil";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { Flower, LogOut, Sparkles, TrendingUp, Award } from "lucide-react";
+import { LogOut, Sparkles, TrendingUp, Award } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { api } from "../convex/_generated/api";

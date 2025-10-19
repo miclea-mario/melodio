@@ -27,8 +27,8 @@ export default function SignIn() {
     try {
       await signIn("password", formData);
       router.push("/");
-    } catch (error: any) {
-      setError(error.message || "An error occurred during sign in");
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : "An error occurred during sign in");
     } finally {
       setIsLoading(false);
     }
