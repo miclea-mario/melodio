@@ -1,46 +1,119 @@
-# Welcome to your Convex + Next.js + Convex Auth app
+# Melodio 🧘‍♀️
 
-This is a [Convex](https://convex.dev/) project created with [`npm create convex`](https://www.npmjs.com/package/create-convex).
+> **Winner: Best Project Built with ElevenLabs**  
+> Cursor Hackathon Bucharest, 2025
 
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
+An immersive AI-powered meditation app that combines real-time voice guidance, personalized mood profiling, and reactive audio visualization to create deeply personalized meditation experiences.
 
-- Convex as your backend (database, server logic)
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Next.js](https://nextjs.org/) for optimized web hosting and page routing
-- [Tailwind](https://tailwindcss.com/) for building great looking accessible UI
-- [Convex Auth](https://labs.convex.dev/auth) for authentication
+## 🏆 Hackathon Project
 
-## Get started
+Built during the **Cursor Hackathon Bucharest** by:
+- [@miclea-mario](https://github.com)
+- [@brobert1](https://github.com/brobert1)
+- [@DanniTSC](https://github.com/DanniTSC)
 
-If you just cloned this codebase and didn't use `npm create convex`, run:
+## ✨ Features
 
-```
+- **AI Mood Profiling**: Dynamic questionnaire using OpenAI GPT-4 to understand your emotional state
+- **Personalized Meditation**: Real-time voice guidance powered by ElevenLabs Conversational AI
+- **Reactive Meditation Orb**: Beautiful audio visualization that pulses and responds to voice guidance using Web Audio API
+- **Session Tracking**: Save and review your complete meditation history
+- **User Profiles**: Personalized experience based on your name, occupation, and emotional state
+- **Immersive UI**: Dark forest theme with smooth animations and glassmorphism effects
+
+## 🎯 How It Works
+
+1. **Sign In** → Authenticate securely with Convex Auth
+2. **Set Up Profile** → Tell us your name, occupation (optional)
+3. **Mood Check-In** → Answer 4 AI-generated questions about your current state
+4. **Meditate** → Experience personalized voice guidance while watching the reactive meditation orb
+5. **Track Progress** → View your meditation history and statistics
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Backend**: Convex (real-time database & serverless functions)
+- **AI**: OpenAI GPT-4 (mood analysis), ElevenLabs Conversational AI (voice guidance)
+- **Visualization**: Web Audio API, Canvas API
+- **UI**: Tailwind CSS v4, Shadcn/ui, Framer Motion
+- **Auth**: Convex Auth
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 20+
+- Convex account ([convex.dev](https://convex.dev))
+- OpenAI API key ([platform.openai.com](https://platform.openai.com))
+- ElevenLabs API key ([elevenlabs.io](https://elevenlabs.io))
+
+### Installation
+
+```bash
+# Install dependencies
 npm install
+
+# Set up environment variables
+# Create .env.local and add your API keys:
+# OPENAI_API_KEY=your_key_here
+# ELEVENLABS_API_KEY=your_key_here
+# NEXT_PUBLIC_ELEVENLABS_AGENT_ID=your_agent_id
+
+# Start the app
 npm run dev
 ```
 
-If you're reading this README on GitHub and want to use this template, run:
+Visit `http://localhost:3000` to start your meditation journey!
+
+## 📁 Project Structure
 
 ```
-npm create convex@latest -- -t nextjs-convexauth
+melodio/
+├── app/                      # Next.js app router pages
+│   ├── page.tsx             # Dashboard with session history
+│   ├── profile-setup/       # User profile setup flow
+│   ├── mood-profiling/      # AI mood questionnaire
+│   └── meditation/          # Meditation session with orb
+├── components/              # React components
+│   ├── MeditationOrb.tsx   # Audio-reactive visualization
+│   ├── ChatInterface.tsx    # Conversation transcript
+│   └── ui/                  # Shadcn UI components
+├── convex/                  # Backend functions & schema
+│   ├── schema.ts           # Database tables
+│   ├── meditation.ts       # Mood profiling & sessions
+│   └── userProfile.ts      # User management
+├── lib/                     # Utilities
+│   ├── elevenlabs.ts       # ElevenLabs integration
+│   └── audioAnalyzer.ts    # Web Audio API utilities
+└── hooks/                   # Custom React hooks
 ```
 
-## Learn more
+## 🎨 Key Technologies
 
-To learn more about developing your project with Convex, check out:
+### ElevenLabs Integration
+Real-time conversational AI that provides personalized meditation guidance. The agent receives dynamic context including:
+- User's name, occupation
+- Current mood analysis from AI questionnaire
+- Previous conversation history
 
-- The [Tour of Convex](https://docs.convex.dev/get-started) for a thorough introduction to Convex principles.
-- The rest of [Convex docs](https://docs.convex.dev/) to learn about all Convex features.
-- [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
-- [Convex Auth docs](https://labs.convex.dev/auth) for documentation on the Convex Auth library.
+### Audio Visualization
+Custom Canvas-based meditation orb that:
+- Analyzes audio frequency and amplitude in real-time
+- Changes color based on detected mood
+- Pulses and scales with voice energy
+- Creates particle effects during high-energy moments
 
-## Configuring other authentication methods
+### AI Mood Profiling
+Dynamic questionnaire where each question adapts based on previous answers, powered by OpenAI GPT-4 to create deeply personalized meditation sessions.
 
-To configure different authentication methods, see [Configuration](https://labs.convex.dev/auth/config) in the Convex Auth docs.
+## 🎯 Why ElevenLabs?
 
-## Join the community
+ElevenLabs Conversational AI was perfect for this project because:
+- **Natural Conversations**: Real-time, flowing meditation guidance without robotic pauses
+- **Dynamic Context**: Ability to inject user context and mood analysis into the agent
+- **High-Quality Voice**: Natural, calming voice that enhances the meditation experience
+- **Real-time Audio**: WebSocket-based streaming enables our reactive visualization
 
-Join thousands of developers building full-stack apps with Convex:
+---
 
-- Join the [Convex Discord community](https://convex.dev/community) to get help in real-time.
-- Follow [Convex on GitHub](https://github.com/get-convex/), star and contribute to the open-source implementation of Convex.
+Built with ❤️ at Cursor Hackathon Bucharest using Next.js, Convex, OpenAI, and ElevenLabs
