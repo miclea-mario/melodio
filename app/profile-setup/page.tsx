@@ -14,9 +14,10 @@ import {
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import { motion } from "framer-motion";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function ProfileSetupPage() {
   const router = useRouter();
@@ -76,9 +77,15 @@ export default function ProfileSetupPage() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-teal-400/30 to-teal-600/30 flex items-center justify-center"
+              className="w-16 h-16 mx-auto mb-4 flex items-center justify-center"
             >
-              <Sparkles className="w-8 h-8 text-teal-400" />
+              <Image
+                src="/logo.svg"
+                alt="Melodio Logo"
+                width={64}
+                height={64}
+                className="w-16 h-16"
+              />
             </motion.div>
             <h1 className="text-3xl font-bold text-slate-100 mb-2">
               Welcome to Melodio

@@ -4,10 +4,11 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Flower, Mail, Lock, AlertCircle } from "lucide-react";
+import { Sparkles, Mail, Lock, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 export default function SignIn() {
   const { signIn } = useAuthActions();
@@ -122,7 +123,13 @@ export default function SignIn() {
               }}
               className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"
             >
-              <Flower className="w-16 h-16 text-teal-400/80" strokeWidth={1.5} />
+              <Image
+                src="/logo.svg"
+                alt="Melodio Logo"
+                width={64}
+                height={64}
+                className="w-16 h-16"
+              />
             </motion.div>
             <h1 className="text-4xl font-bold text-slate-100 mb-2">Melodio</h1>
             <p className="text-slate-400">AI-Powered Meditation</p>
