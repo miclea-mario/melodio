@@ -23,64 +23,69 @@ const STANDARD_QUESTIONS: StandardQuestion[] = [
   {
     question: "What brings you here today?",
     options: [
-      "Feeling stressed or overwhelmed",
-      "Dealing with anxiety or worry",
-      "Having trouble sleeping",
-      "Need to improve focus",
-      "Just want to relax and unwind"
+      "😰 Feeling stressed or overwhelmed",
+      "😟 Dealing with anxiety or worry",
+      "😴 Having trouble sleeping",
+      "🎯 Need to improve focus",
+      "😌 Just want to relax and unwind"
     ]
   },
   {
     question: "How would you describe your energy level right now?",
     options: [
-      "Exhausted and drained",
-      "Low energy",
-      "Neutral",
-      "Energized",
-      "Very energetic"
+      "😵 Exhausted and drained",
+      "😑 Low energy",
+      "😐 Neutral",
+      "⚡ Energized",
+      "🚀 Very energetic"
     ]
   },
   {
     question: "What's happening in your mind at this moment?",
     options: [
-      "Racing thoughts I can't control",
-      "Worrying about the future",
-      "Feeling scattered and unfocused",
-      "Mind feels foggy or unclear",
-      "Relatively calm and present"
+      "🌪️ Racing thoughts I can't control",
+      "😰 Worrying about the future",
+      "🤯 Feeling scattered and unfocused",
+      "🌫️ Mind feels foggy or unclear",
+      "🧘 Relatively calm and present"
     ]
   },
   {
     question: "How is your body feeling?",
     options: [
-      "Tense and tight",
-      "Restless or fidgety",
-      "Heavy and sluggish",
-      "Neutral, no strong sensations",
-      "Relaxed and comfortable"
+      "😬 Tense and tight",
+      "🦵 Restless or fidgety",
+      "🪨 Heavy and sluggish",
+      "😐 Neutral, no strong sensations",
+      "😊 Relaxed and comfortable"
     ]
   },
   {
     question: "What's your primary goal for this session?",
     options: [
-      "Release stress and tension",
-      "Calm anxious thoughts",
-      "Prepare for better sleep",
-      "Boost focus and clarity",
-      "Find inner peace"
+      "💆 Release stress and tension",
+      "🧘 Calm anxious thoughts",
+      "🌙 Prepare for better sleep",
+      "🎯 Boost focus and clarity",
+      "🕊️ Find inner peace"
     ]
   },
   {
     question: "How much time can you dedicate to this session?",
     options: [
-      "Just a few minutes (5-10 min)",
-      "Short session (10-15 min)",
-      "Standard session (15-20 min)",
-      "Extended session (20-30 min)",
-      "Long session (30+ min)"
+      "⏰ Just a few minutes (5-10 min)",
+      "⏱️ Short session (10-15 min)",
+      "⏲️ Standard session (15-20 min)",
+      "⏳ Extended session (20-30 min)",
+      "🕐 Long session (30+ min)"
     ]
   }
 ];
+
+// Helper function to remove emojis from text for analysis
+function removeEmojis(text: string): string {
+  return text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
+}
 
 // Analyze mood based on answers
 function analyzeMoodProfile(answers: QuestionAnswer[], rating: number) {
@@ -88,7 +93,7 @@ function analyzeMoodProfile(answers: QuestionAnswer[], rating: number) {
   let meditationType = "general-wellness";
   
   // Analyze based on what brings them here
-  const mainReason = answers[0]?.answer.toLowerCase() || "";
+  const mainReason = removeEmojis(answers[0]?.answer || "").toLowerCase();
   if (mainReason.includes("stress") || mainReason.includes("overwhelmed")) {
     themes.push("stress");
     meditationType = "stress-relief";
@@ -111,13 +116,13 @@ function analyzeMoodProfile(answers: QuestionAnswer[], rating: number) {
   }
   
   // Analyze energy level
-  const energy = answers[1]?.answer.toLowerCase() || "";
+  const energy = removeEmojis(answers[1]?.answer || "").toLowerCase();
   if (energy.includes("exhausted") || energy.includes("drained") || energy.includes("low")) {
     themes.push("fatigue");
   }
   
   // Analyze mental state
-  const mentalState = answers[2]?.answer.toLowerCase() || "";
+  const mentalState = removeEmojis(answers[2]?.answer || "").toLowerCase();
   if (mentalState.includes("racing") || mentalState.includes("scattered")) {
     themes.push("mental restlessness");
   }
@@ -129,7 +134,7 @@ function analyzeMoodProfile(answers: QuestionAnswer[], rating: number) {
   }
   
   // Analyze physical state
-  const physicalState = answers[3]?.answer.toLowerCase() || "";
+  const physicalState = removeEmojis(answers[3]?.answer || "").toLowerCase();
   if (physicalState.includes("tense") || physicalState.includes("tight")) {
     themes.push("physical tension");
   }
