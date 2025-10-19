@@ -27,8 +27,7 @@ const STANDARD_QUESTIONS: StandardQuestion[] = [
       "Dealing with anxiety or worry",
       "Having trouble sleeping",
       "Need to improve focus",
-      "Just want to relax and unwind",
-      "Feeling low or down"
+      "Just want to relax and unwind"
     ]
   },
   {
@@ -36,7 +35,6 @@ const STANDARD_QUESTIONS: StandardQuestion[] = [
     options: [
       "Exhausted and drained",
       "Low energy",
-      "Somewhat tired",
       "Neutral",
       "Energized",
       "Very energetic"
@@ -47,7 +45,6 @@ const STANDARD_QUESTIONS: StandardQuestion[] = [
     options: [
       "Racing thoughts I can't control",
       "Worrying about the future",
-      "Replaying past events",
       "Feeling scattered and unfocused",
       "Mind feels foggy or unclear",
       "Relatively calm and present"
@@ -59,7 +56,6 @@ const STANDARD_QUESTIONS: StandardQuestion[] = [
       "Tense and tight",
       "Restless or fidgety",
       "Heavy and sluggish",
-      "Uncomfortable or in pain",
       "Neutral, no strong sensations",
       "Relaxed and comfortable"
     ]
@@ -71,8 +67,7 @@ const STANDARD_QUESTIONS: StandardQuestion[] = [
       "Calm anxious thoughts",
       "Prepare for better sleep",
       "Boost focus and clarity",
-      "Find inner peace",
-      "Practice self-compassion"
+      "Find inner peace"
     ]
   },
   {
