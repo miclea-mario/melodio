@@ -23,7 +23,7 @@ export function AudioControls({
 
   const handleVolumeChange = (newVolume: number[]) => {
     setVolume(newVolume);
-    onVolumeChange?.(newVolume[0] / 100); // Convert 0-100 to 0-1
+    onVolumeChange?.(newVolume[0]); // Convert 0-100 to 0-1
   };
 
   return (
