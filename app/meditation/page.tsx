@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { api } from "@/convex/_generated/api";
 import { useElevenLabsSession } from "@/hooks/useElevenLabsSession";
-import { ElevenLabsMusic } from "@/lib/elevenlabsMusic";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { CheckCircle2, X } from "lucide-react";
@@ -49,11 +48,12 @@ export default function MeditationPage() {
   const [sessionDuration, setSessionDuration] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [sessionSaved, setSessionSaved] = useState(false);
-  const [isMusicGenerating, setIsMusicGenerating] = useState(false);
   const sessionStartedRef = useRef(false);
-  const musicGeneratorRef = useRef<ElevenLabsMusic | null>(null);
   const [postSessionRating, setPostSessionRating] = useState<number | null>(null);
   const [showPostRating, setShowPostRating] = useState(false);
+  
+  // Background music audio ref
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Load mood profile from session storage
   useEffect(() => {
@@ -149,47 +149,34 @@ export default function MeditationPage() {
     return () => clearInterval(interval);
   }, [sessionStartTime]);
 
-  // Cleanup music on unmount
+  // Initialize background music
   useEffect(() => {
+    // Create audio element for background music
+    const audio = new Audio("/audio/soundscape.mp3");
+    audio.loop = true;
+    audio.volume = 0.3; // Set to 30% volume
+    audioRef.current = audio;
+
+    // Start playing when session begins
+    if (moodProfile && userProfile) {
+      audio.play().catch(err => console.error("Failed to play audio:", err));
+    }
+
+    // Cleanup
     return () => {
-      if (musicGeneratorRef.current) {
-        musicGeneratorRef.current.stop();
-      }
+      audio.pause();
+      audio.src = "";
     };
-  }, []);
+  }, [moodProfile, userProfile]);
 
   // Start session when ready (only once)
   useEffect(() => {
     if (moodProfile && userProfile && !isConnected && !sessionStartedRef.current) {
       sessionStartedRef.current = true;
       startSession();
-      
-      // Start background music
-      const apiKey = process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY;
-      if (apiKey && moodProfile) {
-        const musicGenerator = new ElevenLabsMusic({
-          apiKey,
-          mood: moodProfile.meditationType || "general-wellness",
-          moodSummary: moodProfile.summary,
-        });
-        
-        musicGeneratorRef.current = musicGenerator;
-        setIsMusicGenerating(true);
-        
-        // Start generating and playing music (async, non-blocking)
-        musicGenerator.generateAndPlay()
-          .then(() => {
-            setIsMusicGenerating(false);
-          })
-          .catch((error) => {
-            console.warn("Background music generation failed:", error);
-            setIsMusicGenerating(false);
-            // Continue without music
-          });
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [moodProfile, userProfile]);
+  }, [moodProfile, userProfile, isConnected]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -200,20 +187,20 @@ export default function MeditationPage() {
   const handlePlayPause = () => {
     togglePlayPause();
     
-    // Control music playback
-    if (musicGeneratorRef.current) {
+    // Control background music
+    if (audioRef.current) {
       if (isPlaying) {
-        musicGeneratorRef.current.pause();
+        audioRef.current.pause();
       } else {
-        musicGeneratorRef.current.resume();
+        audioRef.current.play().catch(err => console.error("Failed to play audio:", err));
       }
     }
   };
 
   const handleVolumeChange = (volume: number) => {
-    // Control music volume
-    if (musicGeneratorRef.current) {
-      musicGeneratorRef.current.setVolume(volume);
+    // Update background music volume
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
     }
   };
 
@@ -231,9 +218,8 @@ export default function MeditationPage() {
 
     try {
       // Stop background music
-      if (musicGeneratorRef.current) {
-        await musicGeneratorRef.current.stop();
-        musicGeneratorRef.current = null;
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
 
       // Save session to database
@@ -306,20 +292,6 @@ export default function MeditationPage() {
         </div>
       </motion.div>
 
-      {/* Music Loading Indicator */}
-      {isMusicGenerating && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="absolute top-6 left-1/2 transform -translate-x-1/2 z-10"
-        >
-          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/50 rounded-full px-6 py-2 flex items-center gap-2">
-            <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" />
-            <p className="text-sm text-slate-300">Generating soundscape...</p>
-          </div>
-        </motion.div>
-      )}
 
       {/* Main Content - Meditation ORB */}
       <div className="h-screen flex items-center justify-center">
