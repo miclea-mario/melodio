@@ -248,14 +248,17 @@ export default function MoodProfilingPage() {
       {/* Main Content */}
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {currentQuestionIndex === -1 ? (
               <motion.div
                 key="rating"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ 
+                  duration: 0.4,
+                  ease: "easeOut"
+                }}
                 className="space-y-8"
               >
                 {/* Rating Question */}
@@ -272,15 +275,27 @@ export default function MoodProfilingPage() {
                 </motion.div>
 
                 {/* Rating Options (1-10) */}
-                <div className="grid grid-cols-5 gap-3">
+                <motion.div 
+                  className="grid grid-cols-5 gap-3"
+                  layout
+                >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating, index) => (
                     <motion.button
-                      key={rating}
+                      key={`rating-${rating}`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 * index }}
+                      transition={{ 
+                        delay: 0.1 * index,
+                        duration: 0.4,
+                        ease: "easeOut"
+                      }}
+                      whileTap={{ 
+                        scale: 0.95,
+                        transition: { duration: 0.1 }
+                      }}
+                      layout
                       onClick={() => handleRatingSelect(rating)}
-                      className={`p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+                      className={`p-6 rounded-xl border-2 transition-colors duration-200 cursor-pointer ${
                         preSessionRating === rating
                           ? "border-teal-400 bg-teal-500/20 shadow-lg shadow-teal-500/50"
                           : "border-slate-700 bg-slate-800/50 hover:border-teal-500/50"
@@ -289,7 +304,7 @@ export default function MoodProfilingPage() {
                       <span className="text-2xl font-bold text-slate-100">{rating}</span>
                     </motion.button>
                   ))}
-                </div>
+                </motion.div>
               </motion.div>
             ) : isLoading ? (
               <motion.div
@@ -308,14 +323,21 @@ export default function MoodProfilingPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ 
+                  duration: 0.4,
+                  ease: "easeOut"
+                }}
                 className="space-y-8"
               >
                 {/* Question */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  transition={{ 
+                    delay: 0.2,
+                    duration: 0.4,
+                    ease: "easeOut"
+                  }}
                   className="text-center"
                 >
                   <h2 className="text-3xl font-semibold text-slate-100 mb-2">
