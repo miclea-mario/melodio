@@ -4,7 +4,7 @@ import { MoodCard } from "@/components/MoodCard";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -237,6 +237,17 @@ export default function MoodProfilingPage() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-4xl mx-auto"
         >
+          <div className="flex items-center justify-between mb-4">
+            <Button
+              onClick={() => router.push("/")}
+              variant="ghost"
+              size="sm"
+              className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          </div>
           <h1 className="text-2xl font-bold text-slate-100 mb-2">Mood Check-In</h1>
           <p className="text-slate-400">
             Let&apos;s understand how you&apos;re feeling today ({currentProgress}/{totalQuestions})
