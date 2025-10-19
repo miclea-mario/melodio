@@ -32,8 +32,8 @@ export default defineSchema({
     duration: v.number(),
     timestamp: v.number(),
     meditationType: v.optional(v.string()),
-    preSessionRating: v.optional(v.number()), // 1-10 rating before session
-    postSessionRating: v.optional(v.number()), // 1-10 rating after session
+    preSessionRating: v.optional(v.number()), // 1-5 emoji rating before session
+    postSessionRating: v.optional(v.number()), // 1-5 emoji rating after session
   }).index("by_user", ["userId"])
     .index("by_timestamp", ["timestamp"]),
 });

@@ -282,17 +282,23 @@ export default function MoodProfilingPage() {
                   <h2 className="text-3xl font-semibold text-white mb-2">
                     How do you feel right now?
                   </h2>
-                  <p className="text-slate-300 text-sm">Rate from 1 (very bad) to 10 (excellent)</p>
+                  <p className="text-slate-300 text-sm">Choose the emoji that best reflects your mood</p>
                 </motion.div>
 
-                {/* Rating Options (1-10) */}
+                {/* Rating Options (1-5 Emojis) */}
                 <motion.div 
-                  className="grid grid-cols-5 gap-3"
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4"
                   layout
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating, index) => (
+                  {[
+                    { emoji: "😢", rating: 1, label: "Very Bad" },
+                    { emoji: "😔", rating: 2, label: "Bad" },
+                    { emoji: "😐", rating: 3, label: "Neutral" },
+                    { emoji: "😊", rating: 4, label: "Good" },
+                    { emoji: "😄", rating: 5, label: "Excellent" }
+                  ].map((item, index) => (
                     <motion.button
-                      key={`rating-${rating}`}
+                      key={`rating-${item.rating}`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ 
@@ -305,14 +311,15 @@ export default function MoodProfilingPage() {
                         transition: { duration: 0.1 }
                       }}
                       layout
-                      onClick={() => handleRatingSelect(rating)}
-                      className={`p-6 rounded-xl border-2 transition-colors duration-200 cursor-pointer ${
-                        preSessionRating === rating
+                      onClick={() => handleRatingSelect(item.rating)}
+                      className={`p-4 sm:p-6 rounded-xl border-2 transition-colors duration-200 cursor-pointer flex flex-col items-center gap-1 sm:gap-2 ${
+                        preSessionRating === item.rating
                           ? "border-teal-400 bg-teal-500/20 shadow-lg shadow-teal-500/50"
                           : "border-slate-700 bg-slate-800/50 hover:border-teal-500/50"
                       }`}
                     >
-                      <span className="text-2xl font-bold text-white">{rating}</span>
+                      <span className="text-3xl sm:text-4xl">{item.emoji}</span>
+                      <span className="text-xs sm:text-xs text-slate-300 text-center leading-tight">{item.label}</span>
                     </motion.button>
                   ))}
                 </motion.div>

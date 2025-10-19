@@ -382,21 +382,28 @@ export default function MeditationPage() {
                   <h3 className="text-xl font-semibold text-white mb-2">
                     How do you feel now?
                   </h3>
-                  <p className="text-slate-300 text-sm">Rate from 1 (very bad) to 10 (excellent)</p>
+                  <p className="text-slate-300 text-sm">Choose the emoji that best reflects your mood</p>
                 </div>
                 
-                <div className="grid grid-cols-5 gap-2">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
+                  {[
+                    { emoji: "😢", rating: 1, label: "Very Bad" },
+                    { emoji: "😔", rating: 2, label: "Bad" },
+                    { emoji: "😐", rating: 3, label: "Neutral" },
+                    { emoji: "😊", rating: 4, label: "Good" },
+                    { emoji: "😄", rating: 5, label: "Excellent" }
+                  ].map((item) => (
                     <button
-                      key={rating}
-                      onClick={() => setPostSessionRating(rating)}
-                      className={`p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
-                        postSessionRating === rating
+                      key={item.rating}
+                      onClick={() => setPostSessionRating(item.rating)}
+                      className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 flex flex-col items-center gap-1 ${
+                        postSessionRating === item.rating
                           ? "border-teal-400 bg-teal-500/20 shadow-lg shadow-teal-500/50"
                           : "border-slate-700 bg-slate-800/50 hover:border-teal-500/50"
                       }`}
                     >
-                      <span className="text-xl font-bold text-white">{rating}</span>
+                      <span className="text-xl sm:text-2xl">{item.emoji}</span>
+                      <span className="text-xs text-slate-300 text-center leading-tight">{item.label}</span>
                     </button>
                   ))}
                 </div>
