@@ -96,23 +96,8 @@ Real-time conversational AI that provides personalized meditation guidance. The 
 - Current mood analysis from AI questionnaire
 - Previous conversation history
 
-### Audio Visualization
-Custom Canvas-based meditation orb that:
-- Analyzes audio frequency and amplitude in real-time
-- Changes color based on detected mood
-- Pulses and scales with voice energy
-- Creates particle effects during high-energy moments
-
 ### AI Mood Profiling
 Dynamic questionnaire where each question adapts based on previous answers, powered by OpenAI GPT-4 to create deeply personalized meditation sessions.
-
-## 🎯 Why ElevenLabs?
-
-ElevenLabs Conversational AI was perfect for this project because:
-- **Natural Conversations**: Real-time, flowing meditation guidance without robotic pauses
-- **Dynamic Context**: Ability to inject user context and mood analysis into the agent
-- **High-Quality Voice**: Natural, calming voice that enhances the meditation experience
-- **Real-time Audio**: WebSocket-based streaming enables our reactive visualization
 
 ---
 
