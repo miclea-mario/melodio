@@ -3,63 +3,180 @@
 import { MoodCard } from "@/components/MoodCard";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { api } from "@/convex/_generated/api";
-import { useAction } from "convex/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface QuestionAnswer {
   question: string;
   answer: string;
 }
 
+interface StandardQuestion {
+  question: string;
+  options: string[];
+}
+
+// Standard mood profiling questions
+const STANDARD_QUESTIONS: StandardQuestion[] = [
+  {
+    question: "What brings you here today?",
+    options: [
+      "Feeling stressed or overwhelmed",
+      "Dealing with anxiety or worry",
+      "Having trouble sleeping",
+      "Need to improve focus",
+      "Just want to relax and unwind",
+      "Feeling low or down"
+    ]
+  },
+  {
+    question: "How would you describe your energy level right now?",
+    options: [
+      "Exhausted and drained",
+      "Low energy",
+      "Somewhat tired",
+      "Neutral",
+      "Energized",
+      "Very energetic"
+    ]
+  },
+  {
+    question: "What's happening in your mind at this moment?",
+    options: [
+      "Racing thoughts I can't control",
+      "Worrying about the future",
+      "Replaying past events",
+      "Feeling scattered and unfocused",
+      "Mind feels foggy or unclear",
+      "Relatively calm and present"
+    ]
+  },
+  {
+    question: "How is your body feeling?",
+    options: [
+      "Tense and tight",
+      "Restless or fidgety",
+      "Heavy and sluggish",
+      "Uncomfortable or in pain",
+      "Neutral, no strong sensations",
+      "Relaxed and comfortable"
+    ]
+  },
+  {
+    question: "What's your primary goal for this session?",
+    options: [
+      "Release stress and tension",
+      "Calm anxious thoughts",
+      "Prepare for better sleep",
+      "Boost focus and clarity",
+      "Find inner peace",
+      "Practice self-compassion"
+    ]
+  },
+  {
+    question: "How much time can you dedicate to this session?",
+    options: [
+      "Just a few minutes (5-10 min)",
+      "Short session (10-15 min)",
+      "Standard session (15-20 min)",
+      "Extended session (20-30 min)",
+      "Long session (30+ min)"
+    ]
+  }
+];
+
+// Analyze mood based on answers
+function analyzeMoodProfile(answers: QuestionAnswer[], rating: number) {
+  const themes: string[] = [];
+  let meditationType = "general-wellness";
+  
+  // Analyze based on what brings them here
+  const mainReason = answers[0]?.answer.toLowerCase() || "";
+  if (mainReason.includes("stress") || mainReason.includes("overwhelmed")) {
+    themes.push("stress");
+    meditationType = "stress-relief";
+  }
+  if (mainReason.includes("anxiety") || mainReason.includes("worry")) {
+    themes.push("anxiety");
+    meditationType = "anxiety-reduction";
+  }
+  if (mainReason.includes("sleep")) {
+    themes.push("sleep");
+    meditationType = "sleep";
+  }
+  if (mainReason.includes("focus")) {
+    themes.push("focus");
+    meditationType = "focus";
+  }
+  if (mainReason.includes("low") || mainReason.includes("down")) {
+    themes.push("low mood");
+    meditationType = "mood-lifting";
+  }
+  
+  // Analyze energy level
+  const energy = answers[1]?.answer.toLowerCase() || "";
+  if (energy.includes("exhausted") || energy.includes("drained") || energy.includes("low")) {
+    themes.push("fatigue");
+  }
+  
+  // Analyze mental state
+  const mentalState = answers[2]?.answer.toLowerCase() || "";
+  if (mentalState.includes("racing") || mentalState.includes("scattered")) {
+    themes.push("mental restlessness");
+  }
+  if (mentalState.includes("worrying")) {
+    themes.push("worry");
+  }
+  if (mentalState.includes("foggy") || mentalState.includes("unclear")) {
+    themes.push("mental clarity needed");
+  }
+  
+  // Analyze physical state
+  const physicalState = answers[3]?.answer.toLowerCase() || "";
+  if (physicalState.includes("tense") || physicalState.includes("tight")) {
+    themes.push("physical tension");
+  }
+  if (physicalState.includes("restless")) {
+    themes.push("restlessness");
+  }
+  
+  // Generate summary based on rating and answers
+  let summary = "";
+  if (rating <= 3) {
+    summary = `You're going through a challenging time right now. Your responses indicate ${themes.slice(0, 2).join(" and ")}. This meditation will help you find relief and support.`;
+  } else if (rating <= 5) {
+    summary = `You're feeling somewhat low today. Let's work on ${themes.slice(0, 2).join(" and ")} to help you feel better.`;
+  } else if (rating <= 7) {
+    summary = `You're doing okay, but there's room for improvement. We'll focus on ${themes.slice(0, 2).join(" and ")} to enhance your wellbeing.`;
+  } else {
+    summary = `You're feeling pretty good! This session will help maintain your positive state and deepen your sense of ${themes[0] || "peace"}.`;
+  }
+  
+  return {
+    summary,
+    themes: themes.slice(0, 3),
+    meditationType
+  };
+}
+
 export default function MoodProfilingPage() {
   const router = useRouter();
-  const generateQuestion = useAction(api.meditation.generateMoodQuestion);
-  const analyzeMood = useAction(api.meditation.analyzeMoodProfile);
 
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1); // -1 for rating
   const [conversationHistory, setConversationHistory] = useState<QuestionAnswer[]>([]);
-  const [currentQuestion, setCurrentQuestion] = useState<string>("");
-  const [currentOptions, setCurrentOptions] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [preSessionRating, setPreSessionRating] = useState<number | null>(null);
-  const [showRatingFirst, setShowRatingFirst] = useState(true);
 
-  const maxQuestions = 4; // Rating + 3 AI-generated questions
-  const totalProgress = preSessionRating ? conversationHistory.length + 1 : conversationHistory.length;
-  const progress = (totalProgress / maxQuestions) * 100;
+  const totalQuestions = STANDARD_QUESTIONS.length + 1; // +1 for rating
+  const currentProgress = currentQuestionIndex + 1;
+  const progress = (currentProgress / totalQuestions) * 100;
 
-  // Load first AI question after rating is provided
-  useEffect(() => {
-    if (preSessionRating && conversationHistory.length === 0 && !currentQuestion && !isLoading && !showRatingFirst) {
-      loadNextQuestion();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [preSessionRating, showRatingFirst]);
-
-  const loadNextQuestion = async () => {
-    setIsLoading(true);
-    setError(null);
-    setSelectedOption(null);
-
-    try {
-      const result = await generateQuestion({
-        conversationHistory,
-      });
-
-      setCurrentQuestion(result.question);
-      setCurrentOptions(result.options);
-    } catch (err) {
-      console.error("Error loading question:", err);
-      setError("Failed to load question. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const currentQuestion = currentQuestionIndex >= 0 
+    ? STANDARD_QUESTIONS[currentQuestionIndex] 
+    : null;
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
@@ -67,72 +184,48 @@ export default function MoodProfilingPage() {
 
   const handleRatingSelect = (rating: number) => {
     setPreSessionRating(rating);
-    setShowRatingFirst(false);
-    // Will trigger the useEffect to load first AI question
+    setSelectedOption(null);
+    setCurrentQuestionIndex(0);
   };
 
-  const handleNext = async () => {
-    if (!selectedOption) return;
+  const handleNext = () => {
+    if (!selectedOption || !currentQuestion) return;
 
     const newHistory = [
       ...conversationHistory,
-      { question: currentQuestion, answer: selectedOption },
+      { question: currentQuestion.question, answer: selectedOption },
     ];
 
     setConversationHistory(newHistory);
     setSelectedOption(null);
 
-    // Check if we've asked enough questions (3 AI questions after the rating)
-    if (newHistory.length >= maxQuestions - 1) {
-      // Analyze mood and redirect to meditation
-      await finalizeMoodProfile(newHistory);
+    // Check if we've completed all questions
+    if (currentQuestionIndex >= STANDARD_QUESTIONS.length - 1) {
+      finalizeMoodProfile(newHistory);
     } else {
-      // Load next question with updated history
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const result = await generateQuestion({
-          conversationHistory: newHistory,
-        });
-
-        setCurrentQuestion(result.question);
-        setCurrentOptions(result.options);
-      } catch (err) {
-        console.error("Error loading question:", err);
-        setError("Failed to load question. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
-  const finalizeMoodProfile = async (history: QuestionAnswer[]) => {
+  const finalizeMoodProfile = (history: QuestionAnswer[]) => {
     setIsLoading(true);
-    try {
-      const analysis = await analyzeMood({
-        conversationHistory: history,
-      });
+    
+    const analysis = analyzeMoodProfile(history, preSessionRating || 5);
 
-      // Store mood data in session storage for the meditation page
-      sessionStorage.setItem(
-        "moodProfile",
-        JSON.stringify({
-          questions: history,
-          summary: analysis.summary,
-          themes: analysis.themes,
-          meditationType: analysis.meditationType,
-          preSessionRating: preSessionRating,
-        })
-      );
+    // Store mood data in session storage for the meditation page
+    sessionStorage.setItem(
+      "moodProfile",
+      JSON.stringify({
+        questions: history,
+        summary: analysis.summary,
+        themes: analysis.themes,
+        meditationType: analysis.meditationType,
+        preSessionRating: preSessionRating,
+      })
+    );
 
-      // Navigate to meditation page
-      router.push("/meditation");
-    } catch (err) {
-      console.error("Error analyzing mood:", err);
-      setError("Failed to analyze your mood. Please try again.");
-      setIsLoading(false);
-    }
+    // Navigate to meditation page
+    router.push("/meditation");
   };
 
   return (
@@ -146,7 +239,7 @@ export default function MoodProfilingPage() {
         >
           <h1 className="text-2xl font-bold text-slate-100 mb-2">Mood Check-In</h1>
           <p className="text-slate-400">
-          Let&apos;s understand how you&apos;re feeling today ({Math.min(totalProgress + 1, maxQuestions)}/{maxQuestions})
+            Let&apos;s understand how you&apos;re feeling today ({currentProgress}/{totalQuestions})
           </p>
           <Progress value={progress} className="mt-4 h-2 bg-slate-700/50 [&>[data-slot=progress-indicator]]:bg-gradient-to-r [&>[data-slot=progress-indicator]]:from-teal-400 [&>[data-slot=progress-indicator]]:to-teal-500 [&>[data-slot=progress-indicator]]:shadow-lg [&>[data-slot=progress-indicator]]:shadow-teal-500/50" />
         </motion.div>
@@ -156,7 +249,7 @@ export default function MoodProfilingPage() {
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full">
           <AnimatePresence mode="wait">
-            {showRatingFirst ? (
+            {currentQuestionIndex === -1 ? (
               <motion.div
                 key="rating"
                 initial={{ opacity: 0, x: 20 }}
@@ -207,28 +300,11 @@ export default function MoodProfilingPage() {
                 className="text-center py-12"
               >
                 <Loader2 className="w-12 h-12 text-teal-400 animate-spin mx-auto mb-4" />
-                <p className="text-slate-400">
-                  {conversationHistory.length >= maxQuestions
-                    ? "Analyzing your mood..."
-                    : "Preparing your question..."}
-                </p>
+                <p className="text-slate-400">Analyzing your mood...</p>
               </motion.div>
-            ) : error ? (
+            ) : currentQuestion ? (
               <motion.div
-                key="error"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-center py-12"
-              >
-                <p className="text-red-400 mb-4">{error}</p>
-                <Button onClick={loadNextQuestion} variant="outline">
-                  Try Again
-                </Button>
-              </motion.div>
-            ) : (
-              <motion.div
-                key={currentQuestion}
+                key={currentQuestionIndex}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
@@ -243,13 +319,13 @@ export default function MoodProfilingPage() {
                   className="text-center"
                 >
                   <h2 className="text-3xl font-semibold text-slate-100 mb-2">
-                    {currentQuestion}
+                    {currentQuestion.question}
                   </h2>
                 </motion.div>
 
                 {/* Options */}
                 <div className="grid grid-cols-1 gap-4">
-                  {currentOptions.map((option, index) => (
+                  {currentQuestion.options.map((option, index) => (
                     <MoodCard
                       key={option}
                       option={option}
@@ -272,13 +348,13 @@ export default function MoodProfilingPage() {
                       size="lg"
                       className="bg-teal-600 hover:bg-teal-500 text-white gap-2 shadow-lg shadow-teal-500/30"
                     >
-                      {conversationHistory.length >= maxQuestions - 2 ? "Begin Meditation" : "Next"}
+                      {currentQuestionIndex >= STANDARD_QUESTIONS.length - 1 ? "Begin Meditation" : "Next"}
                       <ArrowRight className="w-5 h-5" />
                     </Button>
                   </motion.div>
                 )}
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </main>
