@@ -8,6 +8,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { Flower, LogOut, Sparkles, TrendingUp, Award } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { api } from "../convex/_generated/api";
 
@@ -109,8 +110,14 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-3"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 flex items-center justify-center">
+              <Image
+                src="/logo.svg"
+                alt="Melodio Logo"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-100">Melodio</h1>

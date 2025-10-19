@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "AI-Powered Meditation | Melodio",
   description: "AI-Powered Meditation",
   icons: {
-    icon: "/convex.svg",
+    icon: "/logo.svg",
   },
 };
 
