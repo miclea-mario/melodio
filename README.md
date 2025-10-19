@@ -1,4 +1,4 @@
-# Melodio 🧘‍♀️
+# Melodio 🪷
 
 > **Winner: Best Project Built with ElevenLabs**  
 > Cursor Hackathon Bucharest, 2025
