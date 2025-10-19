@@ -178,7 +178,7 @@ export default function Home() {
             <Button
               onClick={handleStartMeditation}
               size="lg"
-              className="bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white text-lg px-8 py-6 rounded-full shadow-2xl shadow-teal-500/30 transition-all"
+              className="bg-gradient-to-r from-teal-700 to-teal-600 hover:scale-105 text-white text-lg font-medium px-8 py-6 rounded-xl cursor-pointer border border-teal-400 shadow-2xl shadow-teal-500/30 transition-all"
             >
               <Sparkles className="w-5 h-5 mr-2" />
               Start Meditation
