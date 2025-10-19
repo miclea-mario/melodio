@@ -229,7 +229,7 @@ export default function MoodProfilingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1628] via-[#0c2234] to-[#0d3d3d] flex flex-col">
+    <div className="min-h-screen bg-meditation-gradient flex flex-col">
       {/* Header */}
       <header className="p-6">
         <motion.div
@@ -242,14 +242,14 @@ export default function MoodProfilingPage() {
               onClick={() => router.push("/")}
               variant="ghost"
               size="sm"
-              className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors cursor-pointer"
+              className="text-slate-300 hover:text-white hover:bg-slate-800/50 transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Button>
           </div>
-          <h1 className="text-2xl font-bold text-slate-100 mb-2">Mood Check-In</h1>
-          <p className="text-slate-400">
+          <h1 className="text-2xl font-bold text-white mb-2">Mood Check-In</h1>
+          <p className="text-slate-300">
             Let&apos;s understand how you&apos;re feeling today ({currentProgress}/{totalQuestions})
           </p>
           <Progress value={progress} className="mt-4 h-2 bg-slate-700/50 [&>[data-slot=progress-indicator]]:bg-gradient-to-r [&>[data-slot=progress-indicator]]:from-teal-400 [&>[data-slot=progress-indicator]]:to-teal-500 [&>[data-slot=progress-indicator]]:shadow-lg [&>[data-slot=progress-indicator]]:shadow-teal-500/50" />
@@ -279,10 +279,10 @@ export default function MoodProfilingPage() {
                   transition={{ delay: 0.2 }}
                   className="text-center"
                 >
-                  <h2 className="text-3xl font-semibold text-slate-100 mb-2">
+                  <h2 className="text-3xl font-semibold text-white mb-2">
                     How do you feel right now?
                   </h2>
-                  <p className="text-slate-400 text-sm">Rate from 1 (very bad) to 10 (excellent)</p>
+                  <p className="text-slate-300 text-sm">Rate from 1 (very bad) to 10 (excellent)</p>
                 </motion.div>
 
                 {/* Rating Options (1-10) */}
@@ -312,7 +312,7 @@ export default function MoodProfilingPage() {
                           : "border-slate-700 bg-slate-800/50 hover:border-teal-500/50"
                       }`}
                     >
-                      <span className="text-2xl font-bold text-slate-100">{rating}</span>
+                      <span className="text-2xl font-bold text-white">{rating}</span>
                     </motion.button>
                   ))}
                 </motion.div>
@@ -326,7 +326,7 @@ export default function MoodProfilingPage() {
                 className="text-center py-12"
               >
                 <Loader2 className="w-12 h-12 text-teal-400 animate-spin mx-auto mb-4" />
-                <p className="text-slate-400">Analyzing your mood...</p>
+                <p className="text-slate-300">Analyzing your mood...</p>
               </motion.div>
             ) : currentQuestion ? (
               <motion.div
@@ -351,7 +351,7 @@ export default function MoodProfilingPage() {
                   }}
                   className="text-center"
                 >
-                  <h2 className="text-3xl font-semibold text-slate-100 mb-2">
+                  <h2 className="text-3xl font-semibold text-white mb-2">
                     {currentQuestion.question}
                   </h2>
                 </motion.div>

@@ -33,13 +33,13 @@ export function AudioControls({
       transition={{ delay: 0.5, duration: 0.5 }}
       className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-10"
     >
-      <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700/50 rounded-full px-8 py-4 shadow-2xl shadow-teal-500/10">
+      <div className="glass rounded-full px-8 py-4 shadow-meditation">
         <div className="flex items-center gap-6">
           {/* Play/Pause Button */}
           <Button
             onClick={onPlayPause}
             size="lg"
-            className="rounded-full w-14 h-14 bg-teal-600 hover:bg-teal-500 transition-all shadow-lg shadow-teal-500/30"
+            className="rounded-full w-14 h-14 bg-primary hover:bg-primary/90 transition-all shadow-lg shadow-primary/30 cursor-pointer"
           >
             {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
           </Button>
@@ -49,14 +49,14 @@ export function AudioControls({
             onClick={onStop}
             size="lg"
             variant="outline"
-            className="rounded-full w-12 h-12 border-slate-600 hover:border-red-500/50 hover:bg-red-500/10"
+            className="rounded-full w-12 h-12 border-border hover:border-destructive/50 hover:bg-destructive/90 cursor-pointer"
           >
             <Square className="w-5 h-5" />
           </Button>
 
           {/* Volume Control */}
           <div className="flex items-center gap-3 px-4">
-            <Volume2 className="w-5 h-5 text-slate-400" />
+            <Volume2 className="w-5 h-5 text-muted-foreground" />
             <Slider
               value={volume}
               onValueChange={handleVolumeChange}

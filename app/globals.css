@@ -45,71 +45,90 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Meditation-themed color palette */
+  --background: oklch(0.98 0.01 240); /* Very light blue-gray */
+  --foreground: oklch(0.15 0.02 240); /* Dark slate blue */
+  --card: oklch(0.99 0.005 240); /* Almost white with subtle blue tint */
+  --card-foreground: oklch(0.15 0.02 240);
+  --popover: oklch(0.99 0.005 240);
+  --popover-foreground: oklch(0.15 0.02 240);
+  
+  /* Primary teal colors for meditation theme */
+  --primary: oklch(0.55 0.15 180); /* Teal-600 */
+  --primary-foreground: oklch(0.98 0.01 240);
+  --secondary: oklch(0.92 0.02 240); /* Light blue-gray */
+  --secondary-foreground: oklch(0.25 0.03 240);
+  --muted: oklch(0.94 0.015 240); /* Muted blue-gray */
+  --muted-foreground: oklch(0.45 0.05 240);
+  --accent: oklch(0.85 0.08 180); /* Light teal accent */
+  --accent-foreground: oklch(0.15 0.02 240);
+  
+  /* Status colors */
+  --destructive: oklch(0.55 0.18 15); /* Warm red for errors */
+  --border: oklch(0.88 0.02 240); /* Subtle blue-gray border */
+  --input: oklch(0.92 0.02 240); /* Input background */
+  --ring: oklch(0.55 0.15 180); /* Teal ring for focus */
+  
+  /* Chart colors - meditation-inspired palette */
+  --chart-1: oklch(0.55 0.15 180); /* Teal */
+  --chart-2: oklch(0.60 0.12 200); /* Blue */
+  --chart-3: oklch(0.50 0.10 160); /* Cyan */
+  --chart-4: oklch(0.65 0.08 140); /* Green-teal */
+  --chart-5: oklch(0.45 0.12 220); /* Deep blue */
+  
+  /* Sidebar colors */
+  --sidebar: oklch(0.96 0.01 240);
+  --sidebar-foreground: oklch(0.20 0.02 240);
+  --sidebar-primary: oklch(0.55 0.15 180);
+  --sidebar-primary-foreground: oklch(0.98 0.01 240);
+  --sidebar-accent: oklch(0.90 0.02 240);
+  --sidebar-accent-foreground: oklch(0.25 0.03 240);
+  --sidebar-border: oklch(0.88 0.02 240);
+  --sidebar-ring: oklch(0.55 0.15 180);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark meditation theme - deep ocean blues and teals */
+  --background: oklch(0.08 0.02 240); /* Very dark blue-gray */
+  --foreground: oklch(0.95 0.01 240); /* Light blue-gray text */
+  --card: oklch(0.12 0.02 240); /* Dark card background */
+  --card-foreground: oklch(0.95 0.01 240);
+  --popover: oklch(0.12 0.02 240);
+  --popover-foreground: oklch(0.95 0.01 240);
+  
+  /* Primary teal colors for dark mode */
+  --primary: oklch(0.65 0.18 180); /* Brighter teal for dark mode */
+  --primary-foreground: oklch(0.08 0.02 240);
+  --secondary: oklch(0.18 0.03 240); /* Dark blue-gray */
+  --secondary-foreground: oklch(0.90 0.01 240);
+  --muted: oklch(0.15 0.02 240); /* Muted dark blue */
+  --muted-foreground: oklch(0.60 0.05 240);
+  --accent: oklch(0.25 0.08 180); /* Dark teal accent */
+  --accent-foreground: oklch(0.95 0.01 240);
+  
+  /* Status colors for dark mode */
+  --destructive: oklch(0.65 0.20 15); /* Brighter red for dark mode */
+  --border: oklch(0.25 0.05 240); /* Subtle dark blue border */
+  --input: oklch(0.15 0.02 240); /* Dark input background */
+  --ring: oklch(0.65 0.18 180); /* Teal ring for focus */
+  
+  /* Chart colors - vibrant for dark mode */
+  --chart-1: oklch(0.65 0.18 180); /* Bright teal */
+  --chart-2: oklch(0.70 0.15 200); /* Bright blue */
+  --chart-3: oklch(0.60 0.12 160); /* Bright cyan */
+  --chart-4: oklch(0.75 0.10 140); /* Bright green-teal */
+  --chart-5: oklch(0.55 0.15 220); /* Bright deep blue */
+  
+  /* Sidebar colors for dark mode */
+  --sidebar: oklch(0.10 0.02 240);
+  --sidebar-foreground: oklch(0.90 0.01 240);
+  --sidebar-primary: oklch(0.65 0.18 180);
+  --sidebar-primary-foreground: oklch(0.08 0.02 240);
+  --sidebar-accent: oklch(0.18 0.03 240);
+  --sidebar-accent-foreground: oklch(0.90 0.01 240);
+  --sidebar-border: oklch(0.25 0.05 240);
+  --sidebar-ring: oklch(0.65 0.18 180);
 }
 
 @layer base {
@@ -153,6 +172,27 @@
   }
 }
 
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 .animate-glow-pulse {
   animation: glow-pulse 3s ease-in-out infinite;
 }
@@ -166,17 +206,119 @@
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(74, 222, 128, 0.1) 50%,
+    oklch(0.65 0.18 180 / 0.1) 50%,
     transparent 100%
   );
   background-size: 1000px 100%;
 }
 
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.animate-wave {
+  animation: wave 3s ease-in-out infinite;
+}
+
+/* Meditation-specific color utilities */
+.bg-meditation-gradient {
+  background: linear-gradient(135deg, 
+    oklch(0.08 0.02 240) 0%, 
+    oklch(0.12 0.03 200) 50%, 
+    oklch(0.10 0.02 180) 100%);
+}
+
+.bg-meditation-light {
+  background: linear-gradient(135deg, 
+    oklch(0.98 0.01 240) 0%, 
+    oklch(0.96 0.02 200) 50%, 
+    oklch(0.97 0.01 180) 100%);
+}
+
+.text-meditation-primary {
+  color: oklch(0.65 0.18 180);
+}
+
+.text-meditation-accent {
+  color: oklch(0.70 0.15 200);
+}
+
+.border-meditation {
+  border-color: oklch(0.25 0.05 240);
+}
+
+.shadow-meditation {
+  box-shadow: 0 4px 20px oklch(0.65 0.18 180 / 0.15);
+}
+
+/* Mood-based color variations */
+.bg-mood-calm {
+  background: linear-gradient(135deg, 
+    oklch(0.08 0.02 200) 0%, 
+    oklch(0.12 0.03 180) 50%, 
+    oklch(0.10 0.02 160) 100%);
+}
+
+.bg-mood-stress {
+  background: linear-gradient(135deg, 
+    oklch(0.08 0.02 280) 0%, 
+    oklch(0.12 0.03 300) 50%, 
+    oklch(0.10 0.02 320) 100%);
+}
+
+.bg-mood-anxiety {
+  background: linear-gradient(135deg, 
+    oklch(0.08 0.02 260) 0%, 
+    oklch(0.12 0.03 280) 50%, 
+    oklch(0.10 0.02 300) 100%);
+}
+
+.bg-mood-energy {
+  background: linear-gradient(135deg, 
+    oklch(0.08 0.02 120) 0%, 
+    oklch(0.12 0.03 140) 50%, 
+    oklch(0.10 0.02 160) 100%);
+}
+
+.bg-mood-sleep {
+  background: linear-gradient(135deg, 
+    oklch(0.08 0.02 240) 0%, 
+    oklch(0.12 0.03 220) 50%, 
+    oklch(0.10 0.02 200) 100%);
+}
+
+.bg-mood-focus {
+  background: linear-gradient(135deg, 
+    oklch(0.08 0.02 180) 0%, 
+    oklch(0.12 0.03 200) 50%, 
+    oklch(0.10 0.02 220) 100%);
+}
+
+.text-mood-calm { color: oklch(0.65 0.18 180); }
+.text-mood-stress { color: oklch(0.65 0.18 280); }
+.text-mood-anxiety { color: oklch(0.65 0.18 260); }
+.text-mood-energy { color: oklch(0.65 0.18 120); }
+.text-mood-sleep { color: oklch(0.65 0.18 240); }
+.text-mood-focus { color: oklch(0.65 0.18 200); }
+
+.border-mood-calm { border-color: oklch(0.65 0.18 180 / 0.3); }
+.border-mood-stress { border-color: oklch(0.65 0.18 280 / 0.3); }
+.border-mood-anxiety { border-color: oklch(0.65 0.18 260 / 0.3); }
+.border-mood-energy { border-color: oklch(0.65 0.18 120 / 0.3); }
+.border-mood-sleep { border-color: oklch(0.65 0.18 240 / 0.3); }
+.border-mood-focus { border-color: oklch(0.65 0.18 200 / 0.3); }
+
 /* Glassmorphism Effect */
 .glass {
-  background: rgba(15, 23, 42, 0.7);
+  background: oklch(0.12 0.02 240 / 0.7);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  border: 1px solid oklch(0.25 0.05 240 / 0.1);
+}
+
+.glass-light {
+  background: oklch(0.99 0.005 240 / 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.88 0.02 240 / 0.1);
 }
 
 /* Custom Scrollbar */
@@ -186,16 +328,29 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.3);
+  background: oklch(0.15 0.02 240 / 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(45, 212, 191, 0.3);
+  background: oklch(0.65 0.18 180 / 0.3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(45, 212, 191, 0.5);
+  background: oklch(0.65 0.18 180 / 0.5);
+}
+
+/* Light mode scrollbar */
+:root ::-webkit-scrollbar-track {
+  background: oklch(0.94 0.015 240 / 0.3);
+}
+
+:root ::-webkit-scrollbar-thumb {
+  background: oklch(0.55 0.15 180 / 0.3);
+}
+
+:root ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.55 0.15 180 / 0.5);
 }
 
 /* Hide scrollbar for credits effect */

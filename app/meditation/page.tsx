@@ -32,9 +32,31 @@ interface MoodProfile {
 }
 
 // Map mood types to color pairs for the Orb
-function getMoodColors(_meditationType: string): [string, string] {
-  // Gray tones for all moods
-  return ["#9ca3af", "#6b7280"]; // Light gray to darker gray
+function getMoodColors(meditationType: string): [string, string] {
+  const moodColorMap: Record<string, [string, string]> = {
+    "stress-relief": ["#4ade80", "#22c55e"], // Green tones
+    "anxiety-reduction": ["#a855f7", "#9333ea"], // Purple tones
+    "sleep": ["#3b82f6", "#1d4ed8"], // Blue tones
+    "focus": ["#06b6d4", "#0891b2"], // Cyan tones
+    "mood-lifting": ["#f59e0b", "#d97706"], // Orange tones
+    "general-wellness": ["#14b8a6", "#0d9488"], // Teal tones
+  };
+  
+  return moodColorMap[meditationType] || moodColorMap["general-wellness"];
+}
+
+// Map mood types to background classes
+function getMoodBackground(meditationType: string): string {
+  const moodBackgroundMap: Record<string, string> = {
+    "stress-relief": "bg-mood-calm",
+    "anxiety-reduction": "bg-mood-anxiety", 
+    "sleep": "bg-mood-sleep",
+    "focus": "bg-mood-focus",
+    "mood-lifting": "bg-mood-energy",
+    "general-wellness": "bg-meditation-gradient",
+  };
+  
+  return moodBackgroundMap[meditationType] || "bg-meditation-gradient";
 }
 
 export default function MeditationPage() {
@@ -255,14 +277,14 @@ export default function MeditationPage() {
 
   if (!moodProfile || !userProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0a1628] via-[#0c2234] to-[#0d3d3d] flex items-center justify-center">
+      <div className="min-h-screen bg-meditation-gradient flex items-center justify-center">
         <p className="text-slate-400">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1628] via-[#0c2234] to-[#0d3d3d] relative overflow-hidden">
+    <div className={`min-h-screen ${getMoodBackground(moodProfile.meditationType)} relative overflow-hidden`}>
       {/* Exit Button */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -337,7 +359,7 @@ export default function MeditationPage() {
       <Dialog open={showExitDialog} onOpenChange={setShowExitDialog}>
         <DialogContent className="bg-slate-900 border-slate-700 max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-slate-100">
+            <DialogTitle className="text-white">
               {sessionSaved ? "Session Complete" : "How do you feel now?"}
             </DialogTitle>
             {sessionSaved ? (
@@ -346,7 +368,7 @@ export default function MeditationPage() {
                 <span>Your session has been saved successfully</span>
               </div>
             ) : (
-              <DialogDescription className="text-slate-400">
+              <DialogDescription className="text-slate-300">
                 You&apos;ve meditated for {formatTime(sessionDuration)}. Please rate how you feel now.
               </DialogDescription>
             )}
@@ -357,10 +379,10 @@ export default function MeditationPage() {
               {/* Post-Session Rating */}
               <div className="space-y-4">
                 <div className="text-center">
-                  <h3 className="text-xl font-semibold text-slate-100 mb-2">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     How do you feel now?
                   </h3>
-                  <p className="text-slate-400 text-sm">Rate from 1 (very bad) to 10 (excellent)</p>
+                  <p className="text-slate-300 text-sm">Rate from 1 (very bad) to 10 (excellent)</p>
                 </div>
                 
                 <div className="grid grid-cols-5 gap-2">
@@ -374,7 +396,7 @@ export default function MeditationPage() {
                           : "border-slate-700 bg-slate-800/50 hover:border-teal-500/50"
                       }`}
                     >
-                      <span className="text-xl font-bold text-slate-100">{rating}</span>
+                      <span className="text-xl font-bold text-white">{rating}</span>
                     </button>
                   ))}
                 </div>
@@ -390,12 +412,12 @@ export default function MeditationPage() {
                       </span>
                     )}
                     {postSessionRating === moodProfile.preSessionRating && (
-                      <span className="text-slate-400">
+                      <span className="text-slate-300">
                         Your mood is stable ({moodProfile.preSessionRating} → {postSessionRating})
                       </span>
                     )}
                     {postSessionRating < moodProfile.preSessionRating && (
-                      <span className="text-slate-400">
+                      <span className="text-slate-300">
                         It&apos;s okay, meditation takes practice ({moodProfile.preSessionRating} → {postSessionRating})
                       </span>
                     )}
@@ -405,7 +427,7 @@ export default function MeditationPage() {
 
               {/* Review Questions & Answers */}
               <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-slate-300">Session Summary</h4>
+                <h4 className="text-sm font-semibold text-white">Session Summary</h4>
                 {moodProfile?.questions.map((qa, index) => (
                   <div key={index} className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
                     <p className="text-xs text-slate-400 mb-1">{qa.question}</p>
@@ -449,8 +471,8 @@ export default function MeditationPage() {
           animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-24 left-1/2 transform -translate-x-1/2"
         >
-          <div className="bg-red-900/80 border border-red-700 rounded-lg px-6 py-3 backdrop-blur-sm">
-            <p className="text-red-100 text-sm">Connection error: {error.message}</p>
+          <div className="bg-destructive/80 border border-destructive rounded-lg px-6 py-3 backdrop-blur-sm">
+            <p className="text-destructive-foreground text-sm">Connection error: {error.message}</p>
           </div>
         </motion.div>
       )}
