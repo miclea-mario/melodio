@@ -1,4 +1,6 @@
 import { Conversation } from "@elevenlabs/client";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "../convex/_generated/api";
 
 export interface UserProfile {
   name: string;
@@ -16,7 +18,7 @@ export interface MoodData {
 
 export interface ElevenLabsConfig {
   agentId: string;
-  apiKey?: string;
+  convexUrl: string;
   userProfile: UserProfile;
   moodData: MoodData;
   onConnect?: () => void;
@@ -31,18 +33,15 @@ export class ElevenLabsSession {
   private conversation: Conversation | null = null;
   private config: ElevenLabsConfig;
   private animationFrameId: number | null = null;
+  private convexClient: ConvexHttpClient;
 
   constructor(config: ElevenLabsConfig) {
     this.config = config;
+    this.convexClient = new ConvexHttpClient(config.convexUrl);
   }
 
   async start() {
     try {
-      // Check if API key is provided
-      if (!this.config.apiKey) {
-        throw new Error("ElevenLabs API key is required");
-      }
-
       // Prepare dynamic variables
       const dynamicVariables = {
         user_name: this.config.userProfile.name,
@@ -52,25 +51,22 @@ export class ElevenLabsSession {
         mood_details: JSON.stringify(this.config.moodData.questions),
       };
 
-      console.log("Starting ElevenLabs session with variables:", dynamicVariables);
-
-      // Get a signed URL for WebSocket connection
-      // This is more secure and required for some agent configurations
-      const signedUrlResponse = await fetch(
-        `https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=${this.config.agentId}`,
-        {
-          method: "GET",
-          headers: {
-            "xi-api-key": this.config.apiKey,
-          },
-        }
+      console.log(
+        "Starting ElevenLabs session with variables:",
+        dynamicVariables,
       );
 
-      if (!signedUrlResponse.ok) {
-        throw new Error(`Failed to get signed URL: ${signedUrlResponse.statusText}`);
-      }
+      // Get a signed URL for WebSocket connection via Convex
+      console.log(`Requesting signed URL for agent: ${this.config.agentId}`);
 
-      const { signed_url } = await signedUrlResponse.json();
+      const signedUrlData = await this.convexClient.action(
+        api.elevenlabs.getSignedUrl,
+        {
+          agentId: this.config.agentId,
+        },
+      );
+
+      const { signed_url } = signedUrlData;
 
       // Start the conversation with signed URL
       this.conversation = await Conversation.startSession({
@@ -121,13 +117,13 @@ export class ElevenLabsSession {
       // The ElevenLabs SDK handles audio output internally
       // We just need to read from its built-in analyser for visualization
       // DO NOT connect to audioContext.destination - that would play audio twice!
-      
+
       const outputAnalyser = this.conversation.getOutputByteFrequencyData();
-      
+
       if (outputAnalyser) {
         // Use the conversation's built-in analyser for visualization
         console.log("✅ Using ElevenLabs built-in audio analyser");
-        
+
         // Start visualization loop using the built-in analyser
         this.startAudioAnalysisFromOutput();
       } else {
@@ -150,14 +146,14 @@ export class ElevenLabsSession {
       try {
         // Get frequency data from conversation output
         const frequencyData = this.conversation.getOutputByteFrequencyData();
-        
+
         if (frequencyData && frequencyData.length > 0) {
           // Convert Uint8Array to Float32Array for consistency
           const floatData = new Float32Array(frequencyData.length);
           for (let i = 0; i < frequencyData.length; i++) {
             floatData[i] = (frequencyData[i] / 255) * 2 - 1; // Normalize to -1 to 1
           }
-          
+
           this.config.onAudioStream?.(floatData);
         }
       } catch {
@@ -211,4 +207,3 @@ export class ElevenLabsSession {
     return this.conversation !== null;
   }
 }
-

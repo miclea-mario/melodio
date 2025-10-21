@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseElevenLabsSessionProps {
   agentId: string;
-  apiKey?: string;
+  convexUrl: string;
   userProfile: UserProfile;
   moodData: MoodData;
   onAudioStream?: (audioData: Float32Array) => void;
@@ -13,7 +13,7 @@ interface UseElevenLabsSessionProps {
 
 export function useElevenLabsSession({
   agentId,
-  apiKey,
+  convexUrl,
   userProfile,
   moodData,
   onAudioStream,
@@ -21,8 +21,10 @@ export function useElevenLabsSession({
   const [isConnected, setIsConnected] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [messages, setMessages] = useState<Array<{ text: string; isAgent: boolean; timestamp: number }>>([]);
-  
+  const [messages, setMessages] = useState<
+    Array<{ text: string; isAgent: boolean; timestamp: number }>
+  >([]);
+
   const sessionRef = useRef<ElevenLabsSession | null>(null);
   const isStartingRef = useRef(false);
 
@@ -47,7 +49,10 @@ export function useElevenLabsSession({
   }, []);
 
   const handleMessage = useCallback((message: string, isAgent: boolean) => {
-    setMessages((prev) => [...prev, { text: message, isAgent, timestamp: Date.now() }]);
+    setMessages((prev) => [
+      ...prev,
+      { text: message, isAgent, timestamp: Date.now() },
+    ]);
   }, []);
 
   const startSession = useCallback(async () => {
@@ -60,17 +65,27 @@ export function useElevenLabsSession({
     isStartingRef.current = true;
 
     try {
-      // Get API key from environment if not provided
-      const elevenLabsApiKey = apiKey || process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY;
+      if (!agentId) {
+        handleError(
+          new Error(
+            "ElevenLabs Agent ID not configured. Please add NEXT_PUBLIC_ELEVENLABS_AGENT_ID to your .env.local file",
+          ),
+        );
+        return;
+      }
 
-      if (!elevenLabsApiKey) {
-        handleError(new Error("ElevenLabs API key not configured. Please add ELEVENLABS_API_KEY to your .env.local file"));
+      if (!convexUrl) {
+        handleError(
+          new Error(
+            "Convex URL not configured. Please add NEXT_PUBLIC_CONVEX_URL to your .env.local file",
+          ),
+        );
         return;
       }
 
       const session = new ElevenLabsSession({
         agentId,
-        apiKey: elevenLabsApiKey,
+        convexUrl,
         userProfile,
         moodData,
         onConnect: handleConnect,
@@ -87,7 +102,7 @@ export function useElevenLabsSession({
     }
   }, [
     agentId,
-    apiKey,
+    convexUrl,
     userProfile,
     moodData,
     handleConnect,
@@ -134,4 +149,3 @@ export function useElevenLabsSession({
     togglePlayPause,
   };
 }
-

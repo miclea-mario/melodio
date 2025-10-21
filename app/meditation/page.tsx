@@ -5,12 +5,12 @@ import { MeditationSubtitles } from "@/components/MeditationSubtitles";
 import { Orb } from "@/components/ui/orb";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { api } from "@/convex/_generated/api";
 import { useElevenLabsSession } from "@/hooks/useElevenLabsSession";
@@ -36,12 +36,12 @@ function getMoodColors(meditationType: string): [string, string] {
   const moodColorMap: Record<string, [string, string]> = {
     "stress-relief": ["#4ade80", "#22c55e"], // Green tones
     "anxiety-reduction": ["#a855f7", "#9333ea"], // Purple tones
-    "sleep": ["#3b82f6", "#1d4ed8"], // Blue tones
-    "focus": ["#06b6d4", "#0891b2"], // Cyan tones
+    sleep: ["#3b82f6", "#1d4ed8"], // Blue tones
+    focus: ["#06b6d4", "#0891b2"], // Cyan tones
     "mood-lifting": ["#f59e0b", "#d97706"], // Orange tones
     "general-wellness": ["#14b8a6", "#0d9488"], // Teal tones
   };
-  
+
   return moodColorMap[meditationType] || moodColorMap["general-wellness"];
 }
 
@@ -49,13 +49,13 @@ function getMoodColors(meditationType: string): [string, string] {
 function getMoodBackground(meditationType: string): string {
   const moodBackgroundMap: Record<string, string> = {
     "stress-relief": "bg-mood-calm",
-    "anxiety-reduction": "bg-mood-anxiety", 
-    "sleep": "bg-mood-sleep",
-    "focus": "bg-mood-focus",
+    "anxiety-reduction": "bg-mood-anxiety",
+    sleep: "bg-mood-sleep",
+    focus: "bg-mood-focus",
     "mood-lifting": "bg-mood-energy",
     "general-wellness": "bg-meditation-gradient",
   };
-  
+
   return moodBackgroundMap[meditationType] || "bg-meditation-gradient";
 }
 
@@ -71,9 +71,11 @@ export default function MeditationPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [sessionSaved, setSessionSaved] = useState(false);
   const sessionStartedRef = useRef(false);
-  const [postSessionRating, setPostSessionRating] = useState<number | null>(null);
+  const [postSessionRating, setPostSessionRating] = useState<number | null>(
+    null,
+  );
   const [showPostRating, setShowPostRating] = useState(false);
-  
+
   // Background music audio ref
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -90,6 +92,7 @@ export default function MeditationPage() {
 
   // Get agent config from environment
   const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID || "";
+  const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || "";
 
   // State for audio analysis data
   const [analysisData, setAnalysisData] = useState({
@@ -100,7 +103,7 @@ export default function MeditationPage() {
     mid: 0,
     treble: 0,
   });
-  
+
   const lastUpdateRef = useRef(0);
   const audioDataRef = useRef(analysisData);
 
@@ -115,6 +118,7 @@ export default function MeditationPage() {
     togglePlayPause,
   } = useElevenLabsSession({
     agentId,
+    convexUrl,
     userProfile: {
       name: userProfile?.name || "Friend",
       gender: userProfile?.gender,
@@ -127,7 +131,8 @@ export default function MeditationPage() {
     onAudioStream: (audioData) => {
       // Throttle updates to max 30fps to prevent freezing
       const now = Date.now();
-      if (now - lastUpdateRef.current < 33) { // 33ms = ~30fps
+      if (now - lastUpdateRef.current < 33) {
+        // 33ms = ~30fps
         return;
       }
       lastUpdateRef.current = now;
@@ -139,7 +144,7 @@ export default function MeditationPage() {
         sum += audioData[i] * audioData[i];
       }
       const amplitude = Math.sqrt(sum / audioData.length);
-      
+
       // Simple energy calculation (average absolute value)
       let energy = 0;
       for (let i = 0; i < audioData.length; i++) {
@@ -156,7 +161,7 @@ export default function MeditationPage() {
         mid: energy,
         treble: energy * 0.8,
       };
-      
+
       audioDataRef.current = newData;
       setAnalysisData(newData);
     },
@@ -181,7 +186,7 @@ export default function MeditationPage() {
 
     // Start playing when session begins
     if (moodProfile && userProfile) {
-      audio.play().catch(err => console.error("Failed to play audio:", err));
+      audio.play().catch((err) => console.error("Failed to play audio:", err));
     }
 
     // Cleanup
@@ -193,7 +198,12 @@ export default function MeditationPage() {
 
   // Start session when ready (only once)
   useEffect(() => {
-    if (moodProfile && userProfile && !isConnected && !sessionStartedRef.current) {
+    if (
+      moodProfile &&
+      userProfile &&
+      !isConnected &&
+      !sessionStartedRef.current
+    ) {
       sessionStartedRef.current = true;
       startSession();
     }
@@ -208,13 +218,15 @@ export default function MeditationPage() {
 
   const handlePlayPause = () => {
     togglePlayPause();
-    
+
     // Control background music
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play().catch(err => console.error("Failed to play audio:", err));
+        audioRef.current
+          .play()
+          .catch((err) => console.error("Failed to play audio:", err));
       }
     }
   };
@@ -284,7 +296,9 @@ export default function MeditationPage() {
   }
 
   return (
-    <div className={`min-h-screen ${getMoodBackground(moodProfile.meditationType)} relative overflow-hidden`}>
+    <div
+      className={`min-h-screen ${getMoodBackground(moodProfile.meditationType)} relative overflow-hidden`}
+    >
       {/* Exit Button */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -310,10 +324,11 @@ export default function MeditationPage() {
         className="absolute top-6 left-6 z-10"
       >
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/50 rounded-full px-6 py-2">
-          <p className="text-2xl font-mono text-teal-400">{formatTime(sessionDuration)}</p>
+          <p className="text-2xl font-mono text-teal-400">
+            {formatTime(sessionDuration)}
+          </p>
         </div>
       </motion.div>
-
 
       {/* Main Content - Meditation ORB */}
       <div className="h-screen flex items-center justify-center">
@@ -369,11 +384,12 @@ export default function MeditationPage() {
               </div>
             ) : (
               <DialogDescription className="text-slate-300">
-                You&apos;ve meditated for {formatTime(sessionDuration)}. Please rate how you feel now.
+                You&apos;ve meditated for {formatTime(sessionDuration)}. Please
+                rate how you feel now.
               </DialogDescription>
             )}
           </DialogHeader>
-          
+
           {!sessionSaved && showPostRating && (
             <div className="space-y-6 py-4">
               {/* Post-Session Rating */}
@@ -382,16 +398,18 @@ export default function MeditationPage() {
                   <h3 className="text-xl font-semibold text-white mb-2">
                     How do you feel now?
                   </h3>
-                  <p className="text-slate-300 text-sm">Choose the emoji that best reflects your mood</p>
+                  <p className="text-slate-300 text-sm">
+                    Choose the emoji that best reflects your mood
+                  </p>
                 </div>
-                
+
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
                   {[
                     { emoji: "😢", rating: 1, label: "Very Bad" },
                     { emoji: "😔", rating: 2, label: "Bad" },
                     { emoji: "😐", rating: 3, label: "Neutral" },
                     { emoji: "😊", rating: 4, label: "Good" },
-                    { emoji: "😄", rating: 5, label: "Excellent" }
+                    { emoji: "😄", rating: 5, label: "Excellent" },
                   ].map((item) => (
                     <button
                       key={item.rating}
@@ -403,7 +421,9 @@ export default function MeditationPage() {
                       }`}
                     >
                       <span className="text-xl sm:text-2xl">{item.emoji}</span>
-                      <span className="text-xs text-slate-300 text-center leading-tight">{item.label}</span>
+                      <span className="text-xs text-slate-300 text-center leading-tight">
+                        {item.label}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -415,17 +435,20 @@ export default function MeditationPage() {
                   <p className="text-sm text-slate-300 text-center">
                     {postSessionRating > moodProfile.preSessionRating && (
                       <span className="text-teal-400">
-                        ✨ You&apos;re feeling better! ({moodProfile.preSessionRating} → {postSessionRating})
+                        ✨ You&apos;re feeling better! (
+                        {moodProfile.preSessionRating} → {postSessionRating})
                       </span>
                     )}
                     {postSessionRating === moodProfile.preSessionRating && (
                       <span className="text-slate-300">
-                        Your mood is stable ({moodProfile.preSessionRating} → {postSessionRating})
+                        Your mood is stable ({moodProfile.preSessionRating} →{" "}
+                        {postSessionRating})
                       </span>
                     )}
                     {postSessionRating < moodProfile.preSessionRating && (
                       <span className="text-slate-300">
-                        It&apos;s okay, meditation takes practice ({moodProfile.preSessionRating} → {postSessionRating})
+                        It&apos;s okay, meditation takes practice (
+                        {moodProfile.preSessionRating} → {postSessionRating})
                       </span>
                     )}
                   </p>
@@ -434,9 +457,14 @@ export default function MeditationPage() {
 
               {/* Review Questions & Answers */}
               <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-white">Session Summary</h4>
+                <h4 className="text-sm font-semibold text-white">
+                  Session Summary
+                </h4>
                 {moodProfile?.questions.map((qa, index) => (
-                  <div key={index} className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                  <div
+                    key={index}
+                    className="bg-slate-800/50 rounded-lg p-3 border border-slate-700"
+                  >
                     <p className="text-xs text-slate-400 mb-1">{qa.question}</p>
                     <p className="text-sm text-slate-200">{qa.answer}</p>
                   </div>
@@ -479,11 +507,12 @@ export default function MeditationPage() {
           className="fixed bottom-24 left-1/2 transform -translate-x-1/2"
         >
           <div className="bg-destructive/80 border border-destructive rounded-lg px-6 py-3 backdrop-blur-sm">
-            <p className="text-destructive-foreground text-sm">Connection error: {error.message}</p>
+            <p className="text-destructive-foreground text-sm">
+              Connection error: {error.message}
+            </p>
           </div>
         </motion.div>
       )}
     </div>
   );
 }
-
